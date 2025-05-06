@@ -9,6 +9,7 @@ export async function CreateAccount(data) {
     }
     catch (error) {
         console.log(error)
+        throw new Error(error)
     }   
 }
 
@@ -18,7 +19,9 @@ export async function Login(data) {
         return response.data;
     } 
     catch ( error) {
+
         console.log(error)
+        throw new Error(error)
 
     }
 }
@@ -92,7 +95,9 @@ export async function UploadFile(formData) {
         const data= await response.data;
         return data;
     } catch (error) {
+      
         console.log(error);
+        throw new Error(error)
     }
 
     

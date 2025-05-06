@@ -35,7 +35,7 @@ const store= createStore({
 
            console.log(error);
            throw new Error(error)
-           return false;
+           
        }
     },
     async loginUser({commit},data){
@@ -45,7 +45,8 @@ const store= createStore({
         return data;
     } catch (error) {
         console.log(error);
-        throw new Error(error)
+        throw new Error(error);
+         
     }
     },
     async getCurrentUser({commit,state}){
