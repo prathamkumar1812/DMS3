@@ -54,7 +54,7 @@ export default {
                     const data = await this.$store.dispatch("loginUser", values);
                     window.location.href = '/';
 
-                    this.$toast.add({ severity: 'success', summary: 'User created successfully.', life: 3000 });
+                    this.$toast.add({ severity: 'success', summary: 'User Login successfully.', life: 3000 });
                 } catch (error) {
                     this.$toast.add({ severity: 'warn', summary: 'Something went wrong.', life: 3000 });
                 }
