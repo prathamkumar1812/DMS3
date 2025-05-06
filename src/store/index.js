@@ -29,7 +29,7 @@ const store= createStore({
     async createUser({commit},data){
        try {
         console.log(data);
-         await CreateAccount({name:data.FullName,password:data.password,email:data.username});
+         await CreateAccount({name:data.fullName,password:data.password,email:data.username});
         
        } catch (error) {
            console.log(error);

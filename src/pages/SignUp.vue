@@ -64,6 +64,7 @@ export default {
             if (valid) {
                 try {
                     await this.$store.dispatch('createUser', values);
+                    window.location.href = '/';
                     this.$toast.add({ severity: 'success', summary: 'Registration successful.', life: 3000 });
                 } catch (error) {
                     this.$toast.add({ severity: 'warn', summary: 'Something went wrong.', life: 3000 });
