@@ -52,7 +52,7 @@ export default {
             if (valid) {
                 try {
                     const data = await this.$store.dispatch("loginUser", values);
-                    window.location.href = '/';
+                      window.location.href = '/';
 
                     this.$toast.add({ severity: 'success', summary: 'User Login successfully.', life: 3000 });
                 } catch (error) {

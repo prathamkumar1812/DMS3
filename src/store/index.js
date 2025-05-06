@@ -32,7 +32,9 @@ const store= createStore({
          await CreateAccount({name:data.fullName,password:data.password,email:data.username});
         
        } catch (error) {
+
            console.log(error);
+           throw new Error(error)
            return false;
        }
     },
@@ -43,6 +45,7 @@ const store= createStore({
         return data;
     } catch (error) {
         console.log(error);
+        throw new Error(error)
     }
     },
     async getCurrentUser({commit,state}){
