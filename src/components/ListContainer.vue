@@ -3,7 +3,7 @@
       <h2 class="m-2 text-3xl">Files</h2>
       
       <!-- Scrollable area -->
-      <div class="h-[550px] overflow-y-auto flex flex-col gap-4 no-scrollbar">
+      <div class="h-[400px] overflow-y-auto flex flex-col gap-4 no-scrollbar">
          <list-item v-for="item in files" :key="item" :fileName="item.fileName" :fileId="item.fileId" :tags="item.tags" />
         <!-- Example static items -->
         
@@ -25,7 +25,7 @@ export default {
     ,
     computed:{
         files(){
-            return this.$store.state.DocFiles;
+            return this.$store.state.DocFiles.items;
         }
     }
 }

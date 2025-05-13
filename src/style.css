@@ -1,4 +1,9 @@
 @import "tailwindcss";
+/* src/assets/main.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body{
     box-sizing: border-box;
 }

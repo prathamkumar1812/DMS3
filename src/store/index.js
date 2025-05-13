@@ -5,7 +5,9 @@ const store= createStore({
    state:{
      User:{},
      isLogin:false,
-     DocFiles:[],
+     DocFiles:{},
+     pageno:1,
+     search:""
      
    },
    mutations:{
@@ -19,17 +21,34 @@ const store= createStore({
       removeUser(state){
         state.User=[];
         state.isLogin=false;
+      },
+      setSearch(state,data){
+        state.search=data;
+      },
+      setPageNo(state,data){
+        state.pageno=data;
+      },
+      setData(state,data){
+        state.DocFiles.totalItems-=1;
+        state.DocFiles.items=data;
       }
      
    },
-   getters:{
-
-   },
+   getters: {
+  totalFiles(state) {
+    return state.DocFiles?.totalItems || 0;
+  },
+   getFileNameById: (state) => (id) => {
+      const file = state.DocFiles.items.find(f => f.fileId === id);
+      return file ? file.fileName : 'Unknown';
+    }
+},
    actions:{
     async createUser({commit},data){
        try {
         console.log(data);
          await CreateAccount({name:data.fullName,password:data.password,email:data.username});
+         await Login({email:data.username,password:data.password});
         
        } catch (error) {
 
@@ -52,31 +71,34 @@ const store= createStore({
     async getCurrentUser({commit,state}){
      try {
        const data= await getMe();
-       const filedata= await getFiles();
-       console.log(filedata)
+      //  const filedata= await getFiles({search:state.search,pageno:state.pageno});
+      //  console.log(filedata)
        commit('setUser', data);
-       commit('setFiles',filedata.items);
+      //  commit('setFiles',filedata);
      } catch (error) {
         console.log(error)
      }
 
     },
-    async Upload({commit,state},formData){
+    async Upload({commit,state},{formData,onUploadProgress}){
        formData.append('UserId',state.User.userId);
        try {
-         const data= await UploadFile(formData);
-         const filedata= await getFiles();
-         commit('setFiles',filedata.items);
-           return data;
+         const data= await UploadFile({formData,onUploadProgress});
+         console.log("error")
+         const filedata= await getFiles({search:"",pageno:1});
+         console.log(filedata)
+         commit('setFiles',filedata);
+         state.User.files++;
+         return data;
        } catch (error) {
          console.log(error)
        }
     },
-    async getFilesFromTags({commit},data){
-      console.log(data);
+    async getFilesFromTags({commit,state}){
+     
        try {
-        const filedata= await getFiles(data);
-        commit('setFiles',filedata.items);
+        const filedata= await getFiles({search:state.search,pageno:state.pageno});
+        commit('setFiles',filedata);
        } catch (error) {
           commit('setFiles',[]);
           console.log(error)
@@ -85,9 +107,11 @@ const store= createStore({
     async deleteFileById({commit,state},data){
        try {
          await deleteFile(data);
-         commit("setFiles",state.DocFiles.filter((file)=>{
-            return file.fileId!=data
-         }));
+         const filedata= await getFiles({search:"",pageno:1});
+         console.log(filedata)
+         commit('setFiles',filedata);
+         state.User.files--;
+         
        } catch (error) {
          console.log(error)
        }
@@ -96,12 +120,33 @@ const store= createStore({
       try {
          await logout();
          commit("removeUser");
-         window.location.href = '/';
+         window.location.href = '/login';
          
       } catch (error) {
         
       }
     }
+    ,
+    async getFilesFromPageNo({commit,state}){
+      
+       try {
+        const filedata= await getFiles({search:state.search,pageno:state.pageno});
+        commit('setFiles',filedata);
+       } catch (error) {
+          commit('setFiles',[]);
+          console.log(error)
+       }
+    },
+    async getFilesData({commit},{tag,pageno}){
+       try {
+         const filedata= await getFiles({search:tag,pageno});
+         commit('setFiles',filedata);
+       } catch (error) {
+          commit('setFiles',[]);
+           throw new Error(error) 
+       }
+    },
+
    }
 
 });

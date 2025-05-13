@@ -4,11 +4,14 @@
         <ProgressSpinner />
     </div>
     <div v-else class=" h-full flex flex-col ">
-      <div v-if="fileUrl" class=" flex flex-row justify-end mb-3">
-      <H2></H2>
+      <div v-if="fileUrl" class=" flex flex-row gap-4  items-center pl-4  mb-3 ml-2.5">
+     <h2 class="text-2xl">
+  {{ fileName.length > 40 ? fileName.slice(0, 40) + '...' : fileName }}
+</h2>
+
       <button @click="downloadFile" class="download-btn">Download File</button>
     </div>
-    <div class="h-full">
+    <div class="h-full ">
       <iframe 
       v-if="isPDF" 
       :src="fileUrl + '#toolbar=0&navpanes=0&scrollbar=0'" 
@@ -18,7 +21,7 @@
 
     <!-- Show Image -->
      <div  v-else-if="isImage"  >
-      <img :src="fileUrl" alt="Preview" class="preview-image" />
+      <img :src="fileUrl" alt="Preview" width="700px" class="preview-image" />
      </div>
    
 
@@ -48,8 +51,9 @@ import VueFilesPreview from 'vue-files-preview';
 import { preview } from '../lib/service'; // Your API service to get the file data
 import Prism from 'prismjs'; // Import Prism.js for syntax highlighting
 import 'prismjs/themes/prism.css'; // Include Prism CSS
-
+import { useStore } from 'vuex';
 const route = useRoute();
+   const store = useStore();
 const fileId = route.params.id as string;
 
 const fileUrl = ref<string>('');
@@ -62,7 +66,7 @@ const isLoading= ref(true);
 const isPDF = computed(() => mimeType.value === 'application/pdf');
 const isImage = computed(() => mimeType.value.startsWith('image/'));
 const isCodeFile = computed(() => mimeType.value.startsWith('text/') || mimeType.value === 'application/json' || mimeType.value === 'text/plain');
-
+const fileName = computed(() => store.getters.getFileNameById(fileId));
 onMounted(async () => {
   try {
     // Request the file data (ensure the responseType is 'blob' for binary data)

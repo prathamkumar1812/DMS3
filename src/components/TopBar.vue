@@ -10,7 +10,7 @@
       <div class="card flex justify-center">
         <Button label="Upload File" @click="visible = true" />
   
-        <Dialog v-model:visible="visible" modal header="Upload File" :style="{ width: '25rem' }">
+        <Dialog  v-model:visible="visible" modal header="Upload File" :style="{ width: '25rem' }">
           <span class="text-surface-500 dark:text-surface-400 block mb-4">
             Select a file to upload and add tags.
           </span>
@@ -20,20 +20,28 @@
             <label for="tags" class="block text-sm mb-1">Tags:</label>
             <Chips class="w-full" v-model="tags" separator="," placeholder="Enter tags and press enter or comma" />
           </div>
-  
+          <div class=" w-full  flex items-center justify-center" v-if="isLoading">
+            <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="transparent"
+    animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+          </div>
+          
           <!-- File Upload -->
           <FileUpload
+            v-else
             name="demo[]"
             :customUpload="true"
             :fileLimit="1"
             :multiple="false"
             @uploader="onCustomUpload"
+            
             :maxFileSize="1000000"
           >
             <template #empty>
               <span>Drag and drop files here to upload.</span>
             </template>
           </FileUpload>
+           
+
         </Dialog>
       </div>
     </div>
@@ -58,11 +66,15 @@
       return {
         visible: false,
         tags: [], // Multi-tag input values,
-        search:""
+        search:"",
+        progress:0,
+        isLoading:false
       };
     },
     methods: {
       async onCustomUpload(event) {
+        console.log(event)
+        this.isLoading=true
         const file = event.files[0];
         if (!file) return;
   
@@ -76,20 +88,65 @@
 
         
   
-        const response = await this.$store.dispatch('Upload', formData);
-        this.$toast.add({ severity: 'info', summary: 'Success', detail: "Upload successfully", life: 3000 });
-  
-        // Reset after upload
-        this.tags = [];
-        this.visible = false;
+try {
+
+    await this.$store.dispatch("Upload",{formData,
+      onUploadProgress: (progressEvent) => {
+        if (progressEvent.lengthComputable) {
+          this.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        }
+      }
+ } );
+    this.$router.push(`/dashboard?pageno=${1}`)
+    this.$toast.add({
+      severity: 'success',
+      summary: 'Upload Complete',
+      detail: 'File uploaded successfully.',
+      life: 3000
+    });
+    this.$router.push(`/dashboard?pageno=1`)
+
+  } catch (error) {
+    console.error(error);
+    this.$toast.add({
+      severity: 'error',
+      summary: 'Upload Failed',
+      detail: 'Error uploading file.',
+      life: 3000
+    });
+  }
+  finally{
+     this.isLoading=false;
+  }
+
+  // Reset
+  this.progress = 0;
+  this.tags = [];
+  this.visible = false;
+  event.options.clear();
+        
       },
       async refreshFiles(){
         try {
-           await this.$store.dispatch("getFilesFromTags",this.search) 
+          // console.log(this.search)
+          //  this.$store.commit("setSearch",this.search);
+          //  await this.$store.dispatch("getFilesFromTags") 
+         const pageno = this.$route.query.pageno || 1;
+        const tagsearch = this.$route.query.tagsearch || '';
+        this.$store.commit("setSearch",this.search)
+        if(this.search){
+          this.$router.push(`/dashboard?pageno=${1}&&tagsearch=${this.search}`)
+        }
+        else{
+           this.$router.push(`/dashboard?pageno=${1}`)
+        }
+       
+
         } catch (error) {
             console.log(error)
         }
-      }
+      },
+     
     }
   };
   </script>

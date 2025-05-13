@@ -28,7 +28,7 @@
                     </section>
                 </FormField>
 
-                <Button type="submit" severity="secondary" label="Submit" />
+                <Button :loading="isLoading" type="submit" severity="secondary" label="Submit" />
             </Form>
 
             <div>
@@ -56,14 +56,17 @@ export default {
                     username: z.string().email({ message: 'Email is required.' }),
                     password: z.string().min(8, { message: 'Minimum 8 characters.' })
                 })
-            )
+            ),
+            isLoading:false
         };
     },
     methods: {
         async onFormSubmit({ valid, values }) {
             if (valid) {
                 try {
+                    this.isLoading=true;
                     await this.$store.dispatch('createUser', values);
+                    this.isLoading=false
                     window.location.href = '/';
                     this.$toast.add({ severity: 'success', summary: 'Registration successful.', life: 3000 });
                 } catch (error) {

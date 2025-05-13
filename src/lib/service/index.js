@@ -50,20 +50,22 @@ export async function logout() {
 /// File Related API Calls
 
 // getAll File related to the Current User
-
-export async function getFiles(search) {
-  console.log(search)
-   let response;
+export async function getFilesByPages(pageno=1) {
    try {
-    if(search){
-       response=axios.get(`/File/?tag=${search}`);
-    }
-    else{
-       response=axios.get("/File");
-    }
-     
-     const data=(await response).data;
+   const response=axios.get(`/File/?pageNumber=${pageno}`);
+   const data=(await response).data;
     
+     return data;
+   } catch (error) {
+    console.log(error);
+    throw new Error(error);
+   }
+}
+
+export async function getFiles({search="",pageno=1}) {
+   try {
+   const response=axios.get(`/File/?tag=${search}&&pageNumber=${pageno}`);
+    const data=(await response).data;
      return data;
    } catch (error) {
     
@@ -89,9 +91,14 @@ export async function preview(id) {
 
 //Upload File Endpoint
 
-export async function UploadFile(formData) {
+export async function UploadFile({formData,onUploadProgress}) {
     try {
-        const response= await axios.post('/File/upload',formData);
+        const response= await axios.post('/File/upload',formData,{
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress:onUploadProgress
+        });
         const data= await response.data;
         return data;
     } catch (error) {

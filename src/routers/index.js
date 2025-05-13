@@ -48,8 +48,17 @@ router.beforeEach((to, from, next) => {
     const isLoggedIn = store.state.isLogin;
   
     if ((to.path === '/login' || to.path === '/sign-up') && isLoggedIn) {
-      next('/');
-    } else if (to.meta.requiresAuth && !isLoggedIn) {
+      next('/dashboard?pageno=1');
+    }
+    
+    else if(to.path==='/'&&!isLoggedIn){
+         next('/dashboard?pageno=1')
+    }
+    else if(to.path==='/'&&isLoggedIn){
+         next('/dashboard?pageno=1')
+    }
+    
+     else if (to.meta.requiresAuth && !isLoggedIn) {
       next('/login');
     } else {
       next();

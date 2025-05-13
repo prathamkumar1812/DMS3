@@ -47,7 +47,7 @@ export default {
    async confirm2() {
             this.$confirm.require({
                 message: 'Do you want to delete this File?',
-                header: 'Danger Zone',
+                header: 'Information',
                 icon: 'pi pi-info-circle',
                 rejectProps: {
                     label: 'Cancel',
@@ -60,7 +60,16 @@ export default {
                 },
                 accept: async () => {
                     await this.$store.dispatch("deleteFileById",this.fileId);
+                     const tagsearch = this.$route.query.tagsearch || '';
+                     if(tagsearch.length>0){
+                      this.$router.push(`/dashboard?pageno=1&&tagsearch=${tagsearch}`)
+                     }
+                     else{
+                      this.$router.push(`/dashboard?pageno=1`)
+                     }
+                    this.$router.push(`/dashboard?pageno=1&&tagsearch=${tagsearch}`)
                     this.$toast.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted', life: 3000 });
+                     
                 },
                 reject: () => {
                 }
