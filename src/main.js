@@ -15,7 +15,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 import axios from 'axios';
 
 // API base setup
-axios.defaults.baseURL = 'https://documentmanagementsystem-production-4bd7.up.railway.app'; // or your prod URL
+axios.defaults.baseURL = 'https://documentmanagementsystem-production-4bd7.up.railway.app/api'; // or your prod URL
 axios.defaults.withCredentials = true;
 
 async function bootstrap() {
