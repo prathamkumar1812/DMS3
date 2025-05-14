@@ -32,7 +32,8 @@
 
 
     <div v-else>
-      <vue-files-preview :url="fileUrl" />
+       <h2 class=" text-center text-3xl">Not able to show Preview
+</h2>
     </div>
 
     </div>

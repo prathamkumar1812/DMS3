@@ -8,6 +8,7 @@ import Preview from "../pages/Preview.vue";
 
 import Profile from "../pages/Profile.vue";
 import Dashboard from "../pages/Dashboard.vue";
+import NotFound from "../pages/NotFound.vue";
 const routes=[
     {
         path:'/',
@@ -35,6 +36,10 @@ const routes=[
         component:Dashboard,
         meta: { requiresAuth: true }
     
+    },
+     {
+        path:"/:pathMatch(.*)*",
+        component:NotFound
     }
 ]
      

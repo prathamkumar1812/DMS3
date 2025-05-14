@@ -39,7 +39,7 @@ const store= createStore({
     return state.DocFiles?.totalItems || 0;
   },
    getFileNameById: (state) => (id) => {
-      const file = state.DocFiles.items.find(f => f.fileId === id);
+      const file = state.DocFiles?.items?.find(f => f.fileId === id);
       return file ? file.fileName : 'Unknown';
     }
 },
@@ -71,6 +71,7 @@ const store= createStore({
     async getCurrentUser({commit,state}){
      try {
        const data= await getMe();
+       
       //  const filedata= await getFiles({search:state.search,pageno:state.pageno});
       //  console.log(filedata)
        commit('setUser', data);
