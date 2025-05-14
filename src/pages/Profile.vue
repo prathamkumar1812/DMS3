@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col border-r-2 items-center gap-5 p-4">
       <div class=" card flex flex-col">
         <div class=" h-[200px] rounded-full w-[200px] border-2 mt-[60px] bg-violet-200 flex items-center justify-center text-[100px]">
-             P
+             {{firstInitial }}
         </div>
         <div class="mt-[80px] w-full flex flex-col gap-5">
            <div>
@@ -84,7 +84,10 @@ export default {
       },
       fullName(){
         return this.$store.state.User.name
-      }
+      },
+       firstInitial() {
+      return this.fullName?.charAt(0).toUpperCase() || '';
+    },
     }
 
 }
