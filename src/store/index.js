@@ -119,8 +119,8 @@ const store= createStore({
     async logoutUser({commit}){
       try {
          await logout();
-         commit("removeUser");
-        
+        commit("removeUser");
+        window.location.href = '/login';
          
       } catch (error) {
         

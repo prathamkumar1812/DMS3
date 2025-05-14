@@ -126,7 +126,7 @@ export default {
         try {
           this.isLoading=true;
            await this.$store.dispatch('logoutUser')
-           this.$route.push('/login')
+             this.$route.push('/login')
         } catch (error) {
             console.log(error)
         }
