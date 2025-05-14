@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
+html.dark {
+  background-color: #121212;
+  color: white;
+}
+
 body{
     box-sizing: border-box;
 }

@@ -19,6 +19,15 @@ axios.defaults.baseURL = 'https://documentmanagementsystem-production-4bd7.up.ra
 axios.defaults.withCredentials = true;
 
 async function bootstrap() {
+
+
+   const savedTheme = localStorage.getItem('theme') || 'dark';
+
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark', 'my-app-dark');
+  } else {
+    document.documentElement.classList.remove('dark', 'my-app-dark');
+  }
   // 1. Wait until user login state is loaded
   await store.dispatch('getCurrentUser');
 

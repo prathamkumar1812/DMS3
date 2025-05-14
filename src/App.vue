@@ -29,7 +29,7 @@ import RadialNav from './components/RadialNav.vue';
     data() {
       return {
         loading: false,
-        checked:false
+        checked: localStorage.getItem('theme') === 'light', // true = light
       };
     },
     methods: {
@@ -39,13 +39,23 @@ import RadialNav from './components/RadialNav.vue';
           this.loading = false;
         }, 2000);
       },
-      toggleTheme(event){
-      document.documentElement.classList.toggle('dark');
-       document.documentElement.classList.toggle('my-app-dark');
-
-       
+      toggleTheme() {
+      if (this.checked) {
+        // User wants light theme
+        document.documentElement.classList.remove('dark', 'my-app-dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        // User wants dark theme
+        document.documentElement.classList.add('dark', 'my-app-dark');
+        localStorage.setItem('theme', 'dark');
       }
     },
+    },
+    mounted() {
+    // Ensure UI sync if theme is dark
+    const isDark = document.documentElement.classList.contains('dark');
+    this.checked = !isDark; // Light = true, Dark = false
+  },
   };
   </script>
   

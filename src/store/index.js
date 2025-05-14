@@ -120,7 +120,7 @@ const store= createStore({
       try {
          await logout();
          commit("removeUser");
-         window.location.href = '/login';
+        
          
       } catch (error) {
         
